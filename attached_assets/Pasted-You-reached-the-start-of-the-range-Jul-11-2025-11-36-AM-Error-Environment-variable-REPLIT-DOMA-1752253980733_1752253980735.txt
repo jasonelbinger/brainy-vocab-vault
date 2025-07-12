@@ -1,0 +1,111 @@
+You reached the start of the range → Jul 11, 2025, 11:36 AM
+
+Error: Environment variable REPLIT_DOMAINS not provided
+
+    at file:///app/dist/index.js:687:9
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:268:25)
+
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:543:26)
+
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+
+ 
+
+Node.js v22.11.0
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+file:///app/dist/index.js:687
+
+  throw new Error("Environment variable REPLIT_DOMAINS not provided");
+
+        ^
+
+ 
+
+Error: Environment variable REPLIT_DOMAINS not provided
+
+    at file:///app/dist/index.js:687:9
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:268:25)
+
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:543:26)
+
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+
+ 
+
+Node.js v22.11.0
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+file:///app/dist/index.js:687
+
+  throw new Error("Environment variable REPLIT_DOMAINS not provided");
+
+        ^
+
+ 
+
+Error: Environment variable REPLIT_DOMAINS not provided
+
+    at file:///app/dist/index.js:687:9
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:268:25)
+
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:543:26)
+
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+
+ 
+
+Node.js v22.11.0
+
+npm warn config production Use `--omit=dev` instead.
+
+ 
+
+> rest-express@1.0.0 start
+
+> NODE_ENV=production node dist/index.js
+
+ 
+
+file:///app/dist/index.js:687
+
+  throw new Error("Environment variable REPLIT_DOMAINS not provided");
+
+        ^
+
+ 
+
+Error: Environment variable REPLIT_DOMAINS not provided
+
+    at file:///app/dist/index.js:687:9
+
+    at ModuleJob.run (node:internal/modules/esm/module_job:268:25)
+
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:543:26)
+
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)
+
+ 
+
+Node.js v22.11.0

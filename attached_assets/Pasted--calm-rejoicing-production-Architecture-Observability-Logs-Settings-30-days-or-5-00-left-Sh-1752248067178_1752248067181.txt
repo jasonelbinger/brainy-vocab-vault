@@ -1,0 +1,324 @@
+
+
+
+
+calm-rejoicing
+
+
+production
+Architecture
+Observability
+Logs
+Settings
+
+30 days or $5.00 left
+
+
+Share
+
+
+
+
+
+Activity
+
+brainy-vocab-vault
+
+Deployment failed
+
+33 minutes ago
+
+brainy-vocab-vault
+
+Deployment failed
+
+35 minutes ago
+
+brainy-vocab-vault
+
+Deployment failed
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment crashed
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+brainy-vocab-vault
+
+Deployment restarted
+
+2 hours ago
+
+
+Fetch More
+
+brainy-vocab-vault
+Deployments
+Variables
+Metrics
+Settings
+brainy-vocab-vault-production.up.railway.app
+us-east4-eqdc4a
+1 Replica
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+History
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+brainy-vocab-vault
+/
+de95852
+Jul 11, 2025, 11:00 AM
+Failed
+
+brainy-vocab-vault-production.up.railway.app
+Get Help
+
+Details
+Build Logs
+Deploy Logs
+HTTP Logs
+
+Filter
+Filter logs using "", (), AND, OR, -
+
+
+
+You reached the start of the range → Jul 11, 2025, 11:00 AM
+
+deleting '/nix/store/0rxb3ixzk4zaqivc9s795m0a3679wbw2-gcc-13.2.0-libgcc'
+
+deleting '/nix/store/1sffjkg6c6ff16fz5yr0pnz3j7vja42h-ed-1.20.2'
+
+deleting '/nix/store/8vvkbgmnin1x2jkp7wcb2zg1p0vc4ks9-gawk-5.2.2'
+
+deleting unused links...
+
+note: currently hard linking saves -3.11 MiB
+
+36 store paths deleted, 243.63 MiB freed
+
+[stage-0  4/15] RUN nix-env -if .nixpacks/nixpkgs-ba913eda2df8eb72147259189d55932012df6301.nix && nix-collect-garbage -d  ✔ 27 sec
+
+[stage-0  5/15] COPY .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix
+
+[stage-0  5/15] COPY .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix  ✔ 42 ms
+
+[stage-0  6/15] RUN nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d
+
+unpacking 'https://github.com/NixOS/nixpkgs/archive/ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.tar.gz'; into the Git cache...
+
+unpacking 'https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz'; into the Git cache...
+
+installing 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+
+error:
+       … while calling the 'derivationStrict' builtin
+         at <nix/derivation-internal.nix>:37:12:
+           36|
+           37|   strict = derivationStrict drvAttrs;
+             |            ^
+           38|
+
+       … while evaluating derivation 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+         whose name attribute is located at /nix/store/lwi59jcfwk2lnrakmm1y5vw85hj3n1bi-source/pkgs/stdenv/generic/make-derivation.nix:375:7
+
+       … while evaluating attribute 'passAsFile' of derivation 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+         at /nix/store/lwi59jcfwk2lnrakmm1y5vw85hj3n1bi-source/pkgs/build-support/trivial-builders/default.nix:60:9:
+           59|         inherit buildCommand name;
+           60|         passAsFile = [ "buildCommand" ]
+             |         ^
+           61|           ++ (derivationArgs.passAsFile or [ ]);
+
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+
+       error: undefined variable 'npm'
+       at /app/.nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix:19:16:
+           18|         '')
+           19|         nodejs npm
+             |                ^
+           20|       ];
+
+✕ [stage-0  6/15] RUN nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d 
+process "/bin/bash -ol pipefail -c nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d" did not complete successfully: exit code: 1
+ 
+
+Dockerfile:10
+
+-------------------
+
+8 |     RUN nix-env -if .nixpacks/nixpkgs-ba913eda2df8eb72147259189d55932012df6301.nix && nix-collect-garbage -d
+
+9 |     COPY .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix
+
+10 | >>> RUN nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d
+
+11 |
+
+12 |     COPY .nixpacks/assets /assets/
+
+-------------------
+
+ERROR: failed to build: failed to solve: process "/bin/bash -ol pipefail -c nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d" did not complete successfully: exit code: 1
+
+Error: Docker build failed
+
+
+Build failed with 1 error
+[stage-0 6/15] RUN nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d
+"nix-env -if .nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix && nix-collect-garbage -d" did not complete successfully: exit code: 1
+
+View in context
+
+unpacking 'https://github.com/NixOS/nixpkgs/archive/ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.tar.gz' into the Git cache...
+
+unpacking 'https://github.com/railwayapp/nix-npm-overlay/archive/main.tar.gz' into the Git cache...
+
+installing 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+
+error:
+
+       … while calling the 'derivationStrict' builtin
+         at <nix/derivation-internal.nix>:37:12:
+           36|
+           37|   strict = derivationStrict drvAttrs;
+             |            ^
+           38|
+       … while evaluating derivation 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+         whose name attribute is located at /nix/store/lwi59jcfwk2lnrakmm1y5vw85hj3n1bi-source/pkgs/stdenv/generic/make-derivation.nix:375:7
+       … while evaluating attribute 'passAsFile' of derivation 'ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7-env'
+         at /nix/store/lwi59jcfwk2lnrakmm1y5vw85hj3n1bi-source/pkgs/build-support/trivial-builders/default.nix:60:9:
+           59|         inherit buildCommand name;
+           60|         passAsFile = [ "buildCommand" ]
+             |         ^
+           61|           ++ (derivationArgs.passAsFile or [ ]);
+       (stack trace truncated; use '--show-trace' to show the full, detailed trace)
+       error: undefined variable 'npm'
+
+       at /app/.nixpacks/nixpkgs-ffeebf0acf3ae8b29f8c7049cd911b9636efd7e7.nix:19:16:
+           18|         '')
+           19|         nodejs npm
+             |                ^
+           20|       ];
+brainy-vocab-vault | Railway
