@@ -18,7 +18,7 @@ import CardList from "@/pages/card-list";
 import Settings from "@/pages/settings";
 import TemplateManagement from "@/pages/template-management";
 import TeacherDashboard from "@/pages/teacher-dashboard";
-import SharedDecks from "@/pages/shared-decks"; // Confirm this file exists
+import SharedDecks from "@/pages/shared-decks";
 import { useAuth } from "@/hooks/useAuth";
 
 function AppHeader() {
