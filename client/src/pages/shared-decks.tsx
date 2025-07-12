@@ -24,9 +24,20 @@ const createDeckSchema = z.object({
 
 type CreateDeckForm = z.infer<typeof createDeckSchema>;
 
+type Assignment = {
+  id: number;
+  name: string | null;
+  description: string | null;
+  cardCount: number | null;
+  studentsAssigned: number | null;
+  dueDate?: string | null;
+  completedAt?: string | null;
+  teacherName?: string | null;
+  assignmentCode?: string | null;
+};
+
 export default function SharedDecks() {
   const [assignmentCode, setAssignmentCode] = useState("");
-  const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -39,17 +50,10 @@ export default function SharedDecks() {
     },
   });
 
-  // Get teacher assignments (word collections sent to student)
   const { data: teacherAssignments = [], isLoading: assignmentsLoading } = useQuery({
     queryKey: ["/api/teacher-assignments"],
   });
 
-  // Get my created collections (for teachers)
-  const { data: myCollections = [], isLoading: collectionsLoading } = useQuery({
-    queryKey: ["/api/teacher-collections"],
-  });
-
-  // Create teacher assignment mutation
   const createAssignmentMutation = useMutation({
     mutationFn: async (data: CreateDeckForm) => {
       return await apiRequest("/api/teacher-assignments", {
@@ -57,23 +61,22 @@ export default function SharedDecks() {
         body: JSON.stringify({
           name: data.name,
           description: data.description,
-          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Default 7 days from now
+          dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
           cardCount: 0,
           studentsAssigned: 0,
-          teacherName: "Current Teacher", // This would come from auth in real app
+          teacherName: "Current Teacher",
         }),
       });
     },
-    onSuccess: (assignment) => {
+    onSuccess: (assignment: Assignment) => {
       toast({
         title: "Assignment Created",
-        description: `Assignment "${assignment.name}" created with code: ${assignment.assignmentCode}`,
+        description: `Assignment "${assignment.name ?? "Untitled"}" created with code: ${assignment.assignmentCode ?? "N/A"}`,
       });
       queryClient.invalidateQueries({ queryKey: ["/api/teacher-collections"] });
-      setCreateDialogOpen(false);
       form.reset();
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Error",
         description: "Failed to create assignment",
@@ -82,42 +85,18 @@ export default function SharedDecks() {
     },
   });
 
-  // Import deck mutation
-  const importDeckMutation = useMutation({
-    mutationFn: async (deckId: number) => {
-      return await apiRequest(`/api/shared-decks/${deckId}/import`, {
-        method: "POST",
-      });
-    },
-    onSuccess: (data) => {
-      toast({
-        title: "Success",
-        description: `Imported ${data.cardsImported} word maps successfully!`,
-      });
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to import deck",
-        variant: "destructive",
-      });
-    },
-  });
-
-  // Get assignment by code
   const getAssignmentMutation = useMutation({
     mutationFn: async (code: string) => {
       return await apiRequest(`/api/teacher-assignments/code/${code}`);
     },
-    onSuccess: (assignment) => {
+    onSuccess: (assignment: Assignment) => {
       toast({
         title: "Found Assignment",
-        description: `Found "${assignment.name}" with ${assignment.cardCount} word maps from your teacher`,
+        description: `Found "${assignment.name ?? "Untitled"}" with ${assignment.cardCount ?? 0} word maps`,
       });
-      // Auto-import the assignment
       importAssignmentMutation.mutate(assignment.id);
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Not Found",
         description: "No assignment found with that code. Check with your teacher.",
@@ -126,7 +105,6 @@ export default function SharedDecks() {
     },
   });
 
-  // Import assignment
   const importAssignmentMutation = useMutation({
     mutationFn: async (assignmentId: number) => {
       return await apiRequest(`/api/teacher-assignments/${assignmentId}/import`, {
@@ -136,60 +114,44 @@ export default function SharedDecks() {
     onSuccess: (data) => {
       toast({
         title: "Assignment Added",
-        description: `Added ${data.cardsImported} word maps from your teacher to your collection!`,
+        description: `Added ${data.cardsImported} word maps to your collection`,
       });
       queryClient.invalidateQueries({ queryKey: ["/api/vocabulary-cards"] });
     },
-    onError: (error) => {
+    onError: () => {
       toast({
         title: "Error",
-        description: "Failed to add assignment to your collection",
+        description: "Failed to add assignment",
         variant: "destructive",
       });
     },
   });
 
-  const handleCreateDeck = (data: CreateDeckForm) => {
-    createAssignmentMutation.mutate(data);
-  };
-
-  const handleImportDeck = (deckId: number) => {
-    importDeckMutation.mutate(deckId);
-  };
-
-  const handleGetAssignment = () => {
-    if (assignmentCode.trim()) {
-      getAssignmentMutation.mutate(assignmentCode.trim());
-    }
-  };
-
-  const handleCopyAssignmentCode = (assignmentCode: string) => {
-    navigator.clipboard.writeText(assignmentCode);
-    toast({
-      title: "Copied",
-      description: "Assignment code copied to clipboard",
-    });
-  };
-
-  // No filtering needed for teacher assignments - they're already personalized
-
-  const AssignmentCard = ({ assignment, showImport = false, showCode = false, isTeacher = false }: any) => (
+  const AssignmentCard = ({
+    assignment,
+    showImport = false,
+    showCode = false,
+    isTeacher = false,
+  }: {
+    assignment: Assignment;
+    showImport?: boolean;
+    showCode?: boolean;
+    isTeacher?: boolean;
+  }) => (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader>
-        <div className="flex items-start justify-between">
+        <div className="flex justify-between">
           <div className="flex-1">
-            <CardTitle className="text-lg">{assignment.name}</CardTitle>
+            <CardTitle className="text-lg">{assignment.name ?? "Untitled"}</CardTitle>
             <CardDescription className="mt-1">
-              {assignment.description || "No description"}
+              {assignment.description ?? "No description"}
             </CardDescription>
           </div>
-          <div className="flex items-center gap-2">
-            {assignment.dueDate && (
-              <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-                Due: {new Date(assignment.dueDate).toLocaleDateString()}
-              </Badge>
-            )}
-          </div>
+          {assignment.dueDate && (
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              Due: {new Date(assignment.dueDate).toLocaleDateString()}
+            </Badge>
+          )}
         </div>
       </CardHeader>
       <CardContent>
@@ -197,11 +159,13 @@ export default function SharedDecks() {
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-1">
               <BookOpen className="h-4 w-4" />
-              {assignment.cardCount} word maps
+              {assignment.cardCount ?? 0} word maps
             </div>
             <div className="flex items-center gap-1">
               <Users className="h-4 w-4" />
-              {isTeacher ? `${assignment.studentsAssigned || 0} students` : `From ${assignment.teacherName}`}
+              {isTeacher
+                ? `${assignment.studentsAssigned ?? 0} students`
+                : `From ${assignment.teacherName ?? "Unknown"}`}
             </div>
             {assignment.completedAt && (
               <div className="flex items-center gap-1 text-green-600">
@@ -211,13 +175,16 @@ export default function SharedDecks() {
             )}
           </div>
 
-          {showCode && (
+          {showCode && assignment.assignmentCode && (
             <div className="flex items-center gap-2 bg-muted p-2 rounded">
               <span className="text-sm font-mono">{assignment.assignmentCode}</span>
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => handleCopyAssignmentCode(assignment.assignmentCode)}
+                onClick={() => {
+                  navigator.clipboard.writeText(assignment.assignmentCode!);
+                  toast({ title: "Copied", description: "Assignment code copied" });
+                }}
               >
                 <Copy className="h-4 w-4" />
               </Button>
@@ -230,7 +197,6 @@ export default function SharedDecks() {
                 variant="default"
                 size="sm"
                 onClick={() => importAssignmentMutation.mutate(assignment.id)}
-                disabled={importAssignmentMutation.isPending}
               >
                 <Download className="h-4 w-4 mr-1" />
                 Add to My Collection
@@ -248,15 +214,6 @@ export default function SharedDecks() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Teacher Assignments
-        </h1>
-        <p className="text-gray-600">
-          Get word collections from your teachers
-        </p>
-      </div>
-
       <Tabs defaultValue="assignments" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="assignments">My Assignments</TabsTrigger>
@@ -266,75 +223,49 @@ export default function SharedDecks() {
 
         <TabsContent value="assignments" className="space-y-6">
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {assignmentsLoading ? (
-              Array.from({ length: 3 }).map((_, i) => (
-                <Card key={i} className="animate-pulse">
-                  <CardHeader>
-                    <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                    <div className="h-3 bg-gray-200 rounded w-full"></div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="h-20 bg-gray-200 rounded"></div>
-                  </CardContent>
-                </Card>
-              ))
-            ) : teacherAssignments.length > 0 ? (
-              teacherAssignments.map((assignment: any) => (
-                <AssignmentCard key={assignment.id} assignment={assignment} showImport />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-12">
-                <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
-                  No assignments yet
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Your teacher will send you word collections to practice
-                </p>
-                <p className="text-sm text-gray-500">
-                  Ask your teacher for an assignment code to get started
-                </p>
-              </div>
-            )}
+            {assignmentsLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <Card key={i} className="animate-pulse">
+                    <CardHeader>
+                      <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
+                      <div className="h-3 bg-gray-200 rounded w-full"></div>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="h-20 bg-gray-200 rounded"></div>
+                    </CardContent>
+                  </Card>
+                ))
+              : teacherAssignments.map((assignment: Assignment) => (
+                  <AssignmentCard key={assignment.id} assignment={assignment} showImport />
+                ))}
           </div>
         </TabsContent>
 
-
-
         <TabsContent value="enter-code" className="space-y-6">
           <div className="max-w-md mx-auto">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              Enter Assignment Code
-            </h2>
-            <div className="space-y-4">
-              <Input
-                placeholder="Enter code from teacher (e.g. VOCAB123)"
-                value={assignmentCode}
-                onChange={(e) => setAssignmentCode(e.target.value.toUpperCase())}
-                className="text-center font-mono"
-              />
-              <Button
-                onClick={handleGetAssignment}
-                disabled={!assignmentCode.trim() || getAssignmentMutation.isPending}
-                className="w-full"
-              >
-                <Download className="h-4 w-4 mr-1" />
-                Get Assignment
-              </Button>
-            </div>
-            <p className="text-sm text-gray-600 text-center mt-4">
-              Enter the assignment code your teacher gave you to add new word maps to your collection
-            </p>
+            <h2 className="text-xl font-semibold mb-4 text-center">Enter Assignment Code</h2>
+            <Input
+              placeholder="Enter code (e.g. VOCAB123)"
+              value={assignmentCode}
+              onChange={(e) => setAssignmentCode(e.target.value.toUpperCase())}
+              className="text-center font-mono"
+            />
+            <Button
+              onClick={() => getAssignmentMutation.mutate(assignmentCode)}
+              disabled={!assignmentCode.trim()}
+              className="w-full mt-4"
+            >
+              <Download className="h-4 w-4 mr-1" />
+              Get Assignment
+            </Button>
           </div>
         </TabsContent>
 
         <TabsContent value="create-assignment" className="space-y-6">
           <div className="max-w-md mx-auto">
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              Create New Assignment
-            </h2>
+            <h2 className="text-xl font-semibold mb-4 text-center">Create New Assignment</h2>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(handleCreateDeck)} className="space-y-4">
+              <form onSubmit={form.handleSubmit((data) => createAssignmentMutation.mutate(data))} className="space-y-4">
                 <FormField
                   control={form.control}
                   name="name"
@@ -342,7 +273,7 @@ export default function SharedDecks() {
                     <FormItem>
                       <FormLabel>Assignment Name</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Science Vocabulary Week 1" {...field} />
+                        <Input placeholder="e.g. Science Week 1" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -353,29 +284,19 @@ export default function SharedDecks() {
                   name="description"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormLabel>Description</FormLabel>
                       <FormControl>
-                        <Textarea 
-                          placeholder="Brief description of the vocabulary topic..."
-                          {...field} 
-                        />
+                        <Textarea placeholder="Topic description..." {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button 
-                  type="submit" 
-                  className="w-full" 
-                  disabled={createAssignmentMutation.isPending}
-                >
+                <Button type="submit" className="w-full">
                   {createAssignmentMutation.isPending ? "Creating..." : "Create Assignment"}
                 </Button>
               </form>
             </Form>
-            <p className="text-sm text-gray-600 text-center mt-4">
-              Students will use the assignment code to add these word maps to their collection
-            </p>
           </div>
         </TabsContent>
       </Tabs>
